@@ -2,6 +2,7 @@ from settings import *
 from pytmx.util_pygame import load_pygame
 from sprites import Sprite
 from entities import Player
+from groups import AllSprites
 
 class Game:
     def __init__(self):
@@ -13,8 +14,7 @@ class Game:
         self.running = True
         
         # groups
-        self.all_sprites = pygame.sprite.Group()
-        self.collision_sprites = pygame.sprite.Group()
+        self.all_sprites = AllSprites()
         
         self.import_assets()
         self.setup(self.tmx_maps['world'], 'house')
@@ -40,7 +40,7 @@ class Game:
                     self.running = False
                     
             # update
-            
+            self.all_sprites.update(dt)
             
             
             # draw
