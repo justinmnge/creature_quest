@@ -1,6 +1,7 @@
 import pygame
 from pygame.math import Vector2 as vector
 from os.path import join
+from pytmx.util_pygame import load_pygame
 from os import walk
 from sys import exit
 
