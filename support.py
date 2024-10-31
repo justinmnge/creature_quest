@@ -45,6 +45,10 @@ def import_tilemap(cols, rows, *path):
             frames[(col, row)] = cutout_surf
     return frames
 
+def coast_importer(cols, rows, *path):
+    frame_dict = import_tilemap(cols, rows, *path)
+    print(frame_dict)
+
 def audio_importer(*path):
     audio_dict = {}
     for folder_path, _, file_names in walk(join(*path)):
