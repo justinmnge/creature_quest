@@ -27,7 +27,8 @@ class Game:
         
         self.overworld_frames = {
             'water': import_folder('graphics', 'tilesets', 'water'),
-            'coast': coast_importer(24, 12, 'graphics', 'tilesets', 'coast')
+            'coast': coast_importer(24, 12, 'graphics', 'tilesets', 'coast'),
+            'characters': all_character_import('graphics', 'characters')
         }
 
         
@@ -46,11 +47,20 @@ class Game:
             for x in range(int(obj.x), int(obj.x + obj.width), TILE_SIZE):
                 for y in range(int(obj.y), int(obj.y + obj.height), TILE_SIZE):
                     AnimatedSprite((x, y), self.overworld_frames['water'], self.all_sprites)
+                    
+        # coast
+        for obj in tmx_map.get_layer_by_name('Coast'):
+            terrain = obj.properties['terrain']
+            side = obj.properties['side']
+            AnimatedSprite((obj.x, obj.y), self.overworld_frames['coast'][terrain][side], self.all_sprites)
         
         # entities    
         for obj in tmx_map.get_layer_by_name('Entities'):
             if obj.name == 'Player' and obj.properties['pos'] == player_start_pos:
-                self.player = Player((obj.x, obj.y), self.all_sprites)
+                self.player = Player(
+                    pos = (obj.x, obj.y), 
+                    frames = self.overworld_frames['characters']['player'], 
+                    groups = self.all_sprites)
         
     def run(self):
         while self.running:
