@@ -1,12 +1,12 @@
 from settings import *
 
 class Entity(pygame.sprite.Sprite):
-    def __init__(self, pos, frames, groups):
+    def __init__(self, pos, frames, groups, facing_direction):
         super().__init__(groups)
         
         # graphics
         self.frame_index, self.frames = 0, frames
-        self.facing_direction = 'down'
+        self.facing_direction = facing_direction
         
         # movement
         self.direction = vector()
@@ -28,23 +28,20 @@ class Entity(pygame.sprite.Sprite):
             if self.direction.y != 0:
                 self.facing_direction = 'down' if self.direction.y > 0 else 'up'
         return f'{self.facing_direction}{'' if moving else '_idle'}'
-    
+
+class Character(Entity):
+    def __init__(self, pos, frames, groups, facing_direction):
+        super().__init__(pos, frames, groups, facing_direction)
+           
 class Player(Entity):
-    def __init__(self, pos, frames, groups):
-        super().__init__(pos, frames, groups)
+    def __init__(self, pos, frames, groups, facing_direction):
+        super().__init__(pos, frames, groups, facing_direction)
         
     def input(self):
         keys = pygame.key.get_pressed()
-        input_vector = vector()
-        if keys[pygame.K_w]:
-            input_vector.y -= 1
-        if keys[pygame.K_s]:
-            input_vector.y += 1
-        if keys[pygame.K_a]:
-            input_vector.x -= 1
-        if keys[pygame.K_d]:
-            input_vector.x += 1
-        self.direction = input_vector
+        self.direction.x = int(keys[pygame.K_d] or keys[pygame.K_RIGHT]) - int(keys[pygame.K_a] or keys[pygame.K_LEFT])
+        self.direction.y = int(keys[pygame.K_s] or keys[pygame.K_DOWN]) - int(keys[pygame.K_w] or keys[pygame.K_UP])
+        self.direction = self.direction.normalize() if self.direction else self.direction
     
     def move(self, dt):
         self.rect.center += self.direction * self.speed * dt
