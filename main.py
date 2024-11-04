@@ -1,5 +1,5 @@
 from settings import *
-from sprites import Sprite, AnimatedSprite, MonsterPatchSprite, BorderSprite
+from sprites import Sprite, AnimatedSprite, MonsterPatchSprite, BorderSprite, Collidableprite
 from entities import Player, Character
 from groups import AllSprites
 from support import *
@@ -56,7 +56,7 @@ class Game:
             if obj.name == 'top':
                 Sprite((obj.x, obj.y), obj.image, self.all_sprites, WORLD_LAYERS['top'])
             else:
-                Sprite((obj.x, obj.y), obj.image, (self.all_sprites, self.collision_sprites))
+                Collidableprite((obj.x, obj.y), obj.image, (self.all_sprites, self.collision_sprites))
                 
         # collision objects
         for obj in tmx_map.get_layer_by_name('Collisions'):
@@ -74,7 +74,8 @@ class Game:
                         pos = (obj.x, obj.y), 
                         frames = self.overworld_frames['characters']['player'], 
                         groups = self.all_sprites,
-                        facing_direction = obj.properties['direction'])
+                        facing_direction = obj.properties['direction'],
+                        collision_sprites = self.collision_sprites)
             else:
                 Character(
                         pos = (obj.x, obj.y), 
