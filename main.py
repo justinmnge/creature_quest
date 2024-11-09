@@ -1,8 +1,10 @@
 from settings import *
+from game_data import *
 from sprites import Sprite, AnimatedSprite, MonsterPatchSprite, BorderSprite, Collidableprite
 from entities import Player, Character
 from groups import AllSprites
 from support import *
+from dialog import *
 
 class Game:
     def __init__(self):
@@ -16,6 +18,7 @@ class Game:
         # groups
         self.all_sprites = AllSprites()
         self.collision_sprites = pygame.sprite.Group()
+        self.character_sprites = pygame.sprite.Group()
         
         self.import_assets()
         self.setup(self.tmx_maps['world'], 'house')
@@ -31,8 +34,11 @@ class Game:
             'coast': coast_importer(24, 12, 'graphics', 'tilesets', 'coast'),
             'characters': all_character_import('graphics', 'characters')
         }
-
         
+        self.fonts = {
+            'dialog': pygame.font.Font(join('graphics', 'fonts', 'PixeloidSans.ttf'), 30)
+        }
+
     def setup(self, tmx_map, player_start_pos):
         # terrain
         for layer in ['Terrain', 'Terrain Top']:
@@ -80,8 +86,22 @@ class Game:
                 Character(
                         pos = (obj.x, obj.y), 
                         frames = self.overworld_frames['characters'][obj.properties['graphic']], 
-                        groups = (self.all_sprites, self.collision_sprites),
-                        facing_direction = obj.properties['direction'])
+                        groups = (self.all_sprites, self.collision_sprites, self.character_sprites),
+                        facing_direction = obj.properties['direction'],
+                        character_data = TRAINER_DATA[obj.properties['character_id']])
+    
+    def input(self):
+        keys = pygame.key.get_just_pressed()
+        if keys[pygame.K_SPACE]:
+            for character in self.character_sprites:
+                if check_connections(100, self.player, character):
+                    self.player.block()
+                    character.change_facing_direction(self.player.rect.center)
+                    self.create_dialog(character)
+                    print('dialog')
+    
+    def create_dialog(self, character):
+        DialogTree(character, self.player, self.all_sprites, self.fonts['dialog'])
         
     def run(self):
         while self.running:
@@ -93,6 +113,7 @@ class Game:
                     self.running = False
                     
             # update
+            self.input()
             self.all_sprites.update(dt)
             
             
