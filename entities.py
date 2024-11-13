@@ -1,5 +1,7 @@
 from settings import *
 from support import check_connections
+from timer import Timer
+from random import choice
 
 class Entity(pygame.sprite.Sprite):
     def __init__(self, pos, frames, groups, facing_direction):
@@ -64,6 +66,13 @@ class Character(Entity):
         self.radius = int(radius)
         self.view_directions = character_data['directions']
         
+        self.timers = {
+            'look around': Timer(1500, autostart = True, repeat = True, func= self.random_view_direction)
+        }
+    
+    def random_view_direction(self):
+        if self.can_rotate:
+            self.facing_direction = choice(self.view_directions)
     
     def get_dialog(self):
         return self.character_data['dialog'][f'{'defeated' if self.character_data['defeated'] else 'default'}']
@@ -94,6 +103,9 @@ class Character(Entity):
                 self.create_dialog(self)
         
     def update(self, dt):
+        for timer in self.timers.values():
+            timer.update()
+        
         self.animate(dt)
         self.raycast()
         self.move(dt)
