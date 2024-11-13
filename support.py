@@ -83,6 +83,12 @@ def audio_importer(*path):
             audio_dict[file_name.split('.')[0]] = pygame.mixer.Sound(join(folder_path, file_name))
     return audio_dict
 
+def tmx_importer(*path):
+    tmx_dict = {}
+    for folder_path, sub_folders, file_names in walk(join(*path)):
+        for file in file_names:
+            tmx_dict[file.split('.')[0]] = load_pygame(join(folder_path, file))
+    return tmx_dict
 
 # game functions
 def check_connections(radius, entity, target, tolerance = 30):
