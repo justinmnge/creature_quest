@@ -24,9 +24,10 @@ class Game:
             1: Monster('Friolera', 29),
             2: Monster('Sparchu', 31),
             3: Monster('Finsta', 28),
-            5: Monster('Ivieron', 31),
-            6: Monster('Pouch', 24),
-            7: Monster('Draem', 25)
+            4: Monster('Ivieron', 31),
+            5: Monster('Pouch', 25),
+            6: Monster('Pluma', 27),
+            7: Monster('Gulfin', 19)
         }
         
         # groups
@@ -48,7 +49,7 @@ class Game:
         
         # overlays
         self.dialog_tree = None
-        self.monster_index = MonsterIndex(self.player_monsters, self.fonts)
+        self.monster_index = MonsterIndex(self.player_monsters, self.fonts, self.monster_frames)
         self.index_open = False
     
     def import_assets(self):
@@ -58,6 +59,10 @@ class Game:
             'water': import_folder('graphics', 'tilesets', 'water'),
             'coast': coast_importer(24, 12, 'graphics', 'tilesets', 'coast'),
             'characters': all_character_import('graphics', 'characters')
+        }
+        
+        self.monster_frames = {
+            'icons': import_folder_dict('graphics', 'icons')
         }
         
         self.fonts = {
