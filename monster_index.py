@@ -1,5 +1,5 @@
 from settings import *
-
+from support import draw_bar
 
 class MonsterIndex:
     def __init__(self, monsters, fonts, monster_frames):
@@ -106,6 +106,34 @@ class MonsterIndex:
         name_surf = self.fonts['bold'].render(monster.name, False, COLORS['white'])
         name_rect = name_surf.get_frect(topleft = top_rect.topleft + vector(10, 10))
         self.display_surface.blit(name_surf, name_rect)
+        
+        # level
+        level_surf = self.fonts['regular'].render(f'Lvl: {monster.level}', False, COLORS['white'])
+        level_rect = level_surf.get_frect(bottomleft = top_rect.bottomleft + vector(10, -13))
+        self.display_surface.blit(level_surf, level_rect)
+        draw_bar(
+            surface = self.display_surface,
+            rect = pygame.FRect(level_rect.bottomleft, (100, 4)),
+            value = monster.xp,
+            max_value = monster.level_up,
+            color = COLORS['white'],
+            bg_color = COLORS['dark'])        
+        
+        # element
+        element_surf = self.fonts['regular'].render(monster.element, False, COLORS['white'])
+        element_rect = element_surf.get_frect(bottomright = top_rect.bottomright + vector(-10, -10))
+        self.display_surface.blit(element_surf, element_rect)          
+        
+        # health and energy
+        bar_data = {
+            'width': rect.width * 0.45,
+            'height': 30,
+            'top': top_rect.bottom + rect.width * 0.03,
+            'left_side': rect.left + rect.width / 4
+        }
+        
+        healthbar_rect = pygame.FRect((0, 0), (bar_data['width'], bar_data['height'])).move_to(midtop = (bar_data['left_side'], bar_data['top']))
+        pygame.draw.rect(self.display_surface, 'red', healthbar_rect)
         
     def update(self, dt):
         self.input()

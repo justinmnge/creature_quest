@@ -26,7 +26,7 @@ class Game:
             3: Monster('Finsta', 28),
             4: Monster('Ivieron', 31),
             5: Monster('Pouch', 25),
-            6: Monster('Pluma', 27),
+            6: Monster('Atrox', 4),
             7: Monster('Gulfin', 19)
         }
         
