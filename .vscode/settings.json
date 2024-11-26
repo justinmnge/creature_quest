@@ -1,4 +1,5 @@
 {
     "commit-pieces-ai.useDescription": true,
-    "commit-pieces-ai.useEmojis": true
+    "commit-pieces-ai.useEmojis": true,
+    "pieces.customUrl": "http://172.21.144.1:1000"
 }
