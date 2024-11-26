@@ -37,4 +37,4 @@ class Monster:
     def get_abilities(self):
         return [ability for lvl, ability in self.abilities.items() if self.level >= lvl]
     
-    #
+    

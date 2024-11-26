@@ -37,7 +37,7 @@ class Battle:
         # ui
         name_pos = monster_sprite.rect.midleft + vector(16, -70)
         MonsterNameSprite(name_pos, monster_sprite, self.battle_sprites, self.fonts['regular'])
-        # MonsterLevelSprite
+        # MonsterLevelSprite a
         # MonsterStatsSprite
         
     def update(self, dt):
