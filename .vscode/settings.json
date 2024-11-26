@@ -1,5 +1,9 @@
 {
     "commit-pieces-ai.useDescription": true,
     "commit-pieces-ai.useEmojis": true,
+<<<<<<< HEAD
     "pieces.customUrl": "http://172.21.144.1:1000"
+=======
+    "pieces.customUrl": "http://172.28.176.1:1000"
+>>>>>>> d692d4a (feat ✨: Added custom URL for pieces in commit pieces AI configuration.)
 }
