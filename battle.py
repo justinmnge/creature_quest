@@ -16,6 +16,9 @@ class Battle:
         self.player_sprites = pygame.sprite.Group()
         self.opponent_sprites = pygame.sprite.Group()
         
+        # control
+        self.current_monster = None
+        
         self.setup()
     
     def setup(self):
@@ -42,7 +45,24 @@ class Battle:
         MonsterLevelSprite(entity, level_pos, monster_sprite, self.battle_sprites, self.fonts['small'])
         MonsterStatsSprite(monster_sprite.rect.midbottom + vector(0, 20), monster_sprite, (150, 48), self.battle_sprites, self.fonts['small'])
         
+    # battle system
+    def check_active(self):
+        for monster_sprite in self.player_sprites.sprites() + self.opponent_sprites.sprites():
+            if monster_sprite.monster.initiative >= 100:
+                self.update_all_monsters('pause')
+                monster_sprite.monster.initiative = 0
+                monster_sprite.set_highlight(True)
+                self.current_monster = monster_sprite
+                
+    def update_all_monsters(self, option):
+        for monster_sprite in self.player_sprites.sprites() + self.opponent_sprites.sprites():
+            monster_sprite.monster.paused = True if option == 'pause' else False
+    
     def update(self, dt):
-        self.display_surface.blit(self.bg_surf, (0, 0))
+        # pdates
         self.battle_sprites.update(dt)
+        self.check_active()
+        
+        # drawing
+        self.display_surface.blit(self.bg_surf, (0, 0))
         self.battle_sprites.draw()

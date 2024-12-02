@@ -57,6 +57,7 @@ class MonsterSprite(pygame.sprite.Sprite):
         self.frame_index, self.frames, self.state = 0, frames, 'idle'
         self.animation_speed = ANIMATION_SPEED + uniform(-1, 1)
         self.z = BATTLE_LAYERS['monster']
+        self.highlight = False
         
         # sprite setup
         super().__init__(groups)
@@ -66,9 +67,13 @@ class MonsterSprite(pygame.sprite.Sprite):
     def animate(self, dt):
         self.frame_index += ANIMATION_SPEED * dt
         self.image = self.frames[self.state][int(self.frame_index) % len(self.frames[self.state])]
+    
+    def set_highlight(self, value):
+        self.highlight = value
         
     def update(self, dt):
         self.animate(dt)
+        self.monster.update(dt)
         
 class MonsterNameSprite(pygame.sprite.Sprite):
     def __init__(self, pos, monster_sprite, groups, font):
