@@ -100,6 +100,21 @@ def monster_importer(cols, rows, *path):
             for row, key in enumerate(('idle', 'attack')):
                 monster_dict[image_name][key] = [frame_dict[(col, row)] for col in range(cols)]
     return monster_dict
+
+def outline_creator(frame_dict, width):
+    outline_frame_dict = {}
+    for monster, monster_frames in frame_dict.items():
+        outline_frame_dict[monster] = {}
+        for state, frames in monster_frames.items():
+            outline_frame_dict[monster][state] = []
+            for frame in frames:
+                new_surf = pygame.Surface(vector(frame.get_size()) + vector(width * 2))
+                white_frame = pygame.mask.from_surface(frame).to_surface()
+                white_frame.set_colorkey('black')
+                
+                new_surf.blit(white_frame, (0, 0)) # topleft
+                outline_frame_dict[monster][state].append(new_surf)
+    return outline_frame_dict
                 
 # game functions
 def draw_bar(surface, rect, value, max_value, color, bg_color, radius = 1):

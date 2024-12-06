@@ -1,5 +1,5 @@
 from settings import *
-from sprites import MonsterSprite, MonsterNameSprite, MonsterLevelSprite, MonsterStatsSprite
+from sprites import MonsterSprite, MonsterNameSprite, MonsterLevelSprite, MonsterStatsSprite, MonsterOutlineSprite
 from groups import BattleSprites
 
 class Battle:
@@ -28,15 +28,18 @@ class Battle:
         
     def create_monster(self, monster, index, pos_index, entity):
         frames = self.monster_frames['monsters'][monster.name]
+        outline_frames = self.monster_frames['outlines'][monster.name]
         if entity == 'player':
             pos = list(BATTLE_POSITIONS['left'].values())[pos_index]
             groups = (self.battle_sprites, self.player_sprites)
             frames = {state: [pygame.transform.flip(frame, True, False) for frame in frames] for state, frames in frames.items()}
+            outline_frames = {state: [pygame.transform.flip(frame, True, False) for frame in frames] for state, frames in outline_frames.items()}
         else:
             pos = list(BATTLE_POSITIONS['right'].values())[pos_index]
             groups = (self.battle_sprites, self.opponent_sprites)        
             
         monster_sprite = MonsterSprite(pos, frames, groups, monster, index, pos_index, entity)
+        MonsterOutlineSprite(monster_sprite, self.battle_sprites, outline_frames)
         
         # ui
         name_pos = monster_sprite.rect.midleft + vector(16, -70) if entity == 'player' else monster_sprite.rect.midright + vector(-40, -70)
@@ -65,4 +68,4 @@ class Battle:
         
         # drawing
         self.display_surface.blit(self.bg_surf, (0, 0))
-        self.battle_sprites.draw()
+        self.battle_sprites.draw(self.current_monster)
