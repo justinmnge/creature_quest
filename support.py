@@ -108,11 +108,18 @@ def outline_creator(frame_dict, width):
         for state, frames in monster_frames.items():
             outline_frame_dict[monster][state] = []
             for frame in frames:
-                new_surf = pygame.Surface(vector(frame.get_size()) + vector(width * 2))
+                new_surf = pygame.Surface(vector(frame.get_size()) + vector(width * 2), pygame.SRCALPHA)
+                new_surf.fill((0, 0, 0, 0))
                 white_frame = pygame.mask.from_surface(frame).to_surface()
                 white_frame.set_colorkey('black')
                 
-                new_surf.blit(white_frame, (0, 0)) # topleft
+                new_surf.blit(white_frame, (0, 0))
+                new_surf.blit(white_frame, (width, 0))
+                new_surf.blit(white_frame, (width * 2, width))
+                new_surf.blit(white_frame, (width * 2, width * 2))
+                new_surf.blit(white_frame, (width, width * 2))
+                new_surf.blit(white_frame, (0, width * 2))
+                new_surf.blit(white_frame, (0, width))
                 outline_frame_dict[monster][state].append(new_surf)
     return outline_frame_dict
                 
