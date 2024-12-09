@@ -2,6 +2,7 @@ from settings import *
 from sprites import MonsterSprite, MonsterNameSprite, MonsterLevelSprite, MonsterStatsSprite, MonsterOutlineSprite
 from groups import BattleSprites
 from game_data import ATTACK_DATA
+from support import draw_bar
 
 class Battle:
     # main
@@ -87,7 +88,9 @@ class Battle:
                         
                     if self.indexes['general'] == 3:
                         print('catch')
-                        
+            if keys[pygame.K_ESCAPE]:
+                if self.selection_mode in ('attacks', 'switch', 'target'):
+                    self.selection_mode = 'general'                        
         
     # battle system
     def check_active(self):
@@ -190,9 +193,14 @@ class Battle:
                     pygame.draw.rect(self.display_surface, COLORS['dark_white'], item_bg_rect, 0, 0, 0, 0, 5, 5)
                 else:
                     pygame.draw.rect(self.display_surface, COLORS['dark_white'], item_bg_rect)
-            
-            for surf, rect in ((icon_surf, icon_rect), (text_surf, text_rect)):
-                self.display_surface.blit(surf, rect)
+                    
+            if bg_rect.collidepoint(item_bg_rect.center):
+                for surf, rect in ((icon_surf, icon_rect), (text_surf, text_rect)):
+                    self.display_surface.blit(surf, rect)
+                health_rect = pygame.FRect((text_rect.bottomleft + vector(0, 4)), (100, 4))
+                energy_rect = pygame.FRect((health_rect.bottomleft + vector(0, 2)), (80, 4))
+                draw_bar(self.display_surface, health_rect, monster.health, monster.get_stat('max_health'), COLORS['red'], COLORS['black'])
+                draw_bar(self.display_surface, energy_rect, monster.energy, monster.get_stat('max_energy'), COLORS['blue'], COLORS['black'])
     
     def update(self, dt):
         # updates
