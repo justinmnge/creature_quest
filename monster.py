@@ -48,6 +48,9 @@ class Monster:
             (self.energy, self.get_stat('max_energy')),
             (self.initiative, 100)
         )
+    
+    def reduce_energy(self, attack):
+        self.energy -= ATTACK_DATA[attack]['cost']
         
     def update(self, dt):
         if not self.paused:
