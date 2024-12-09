@@ -66,6 +66,7 @@ class Battle:
             match self.selection_mode:
                 case 'general': limiter = len(BATTLE_CHOICES['full'])
                 case 'attacks': limiter = len(self.current_monster.monster.get_abilities(all = False))
+                case 'switch': limiter = len(self.available_monsters)
             
             if keys[pygame.K_DOWN]:
                 self.indexes[self.selection_mode] = (self.indexes[self.selection_mode] + 1) % limiter
@@ -160,7 +161,38 @@ class Battle:
                 self.display_surface.blit(text_surf, text_rect)
     
     def draw_switch(self):
-        pass
+        # data
+        width, height = 300, 320
+        visible_monsters = 4
+        item_height = height / visible_monsters
+        v_offset = 0 if self.indexes['switch'] < visible_monsters else -(self.indexes['switch'] - visible_monsters + 1) * item_height
+        bg_rect = pygame.FRect((0, 0), (width, height)).move_to(midleft = self.current_monster.rect.midright + vector(20, 0))
+        pygame.draw.rect(self.display_surface, COLORS['white'], bg_rect, 0, 5)
+        
+        # monsters 
+        active_monsters = [(monster_sprite.index, monster_sprite.monster) for monster_sprite in self.player_sprites]
+        self.available_monsters = {index: monster for index, monster in self.monster_data['player'].items() if (index, monster) not in active_monsters and monster.health > 0}
+        
+        for index, monster in enumerate(self.available_monsters.values()):
+            selected = index == self.indexes['switch']
+            item_bg_rect = pygame.FRect((0, 0), (width, item_height)).move_to(midleft = (bg_rect.left, bg_rect.top + item_height / 2 + index * item_height + v_offset))
+            
+            icon_surf = self.monster_frames['icons'][monster.name]
+            icon_rect = icon_surf.get_frect(midleft = bg_rect.topleft + vector(10, item_height / 2 + index * item_height + v_offset))
+            text_surf = self.fonts['regular'].render(f'{monster.name} ({monster.level})', False, COLORS['red'] if selected else COLORS['black'])
+            text_rect = text_surf.get_frect(topleft = (bg_rect.left + 90, icon_rect.top))
+            
+            # selection_bg
+            if selected:
+                if item_bg_rect.collidepoint(bg_rect.topleft):
+                    pygame.draw.rect(self.display_surface, COLORS['dark_white'], item_bg_rect, 0, 0, 5, 5)
+                elif item_bg_rect.collidepoint(bg_rect.midbottom + vector(0, -1)):
+                    pygame.draw.rect(self.display_surface, COLORS['dark_white'], item_bg_rect, 0, 0, 0, 0, 5, 5)
+                else:
+                    pygame.draw.rect(self.display_surface, COLORS['dark_white'], item_bg_rect)
+            
+            for surf, rect in ((icon_surf, icon_rect), (text_surf, text_rect)):
+                self.display_surface.blit(surf, rect)
     
     def update(self, dt):
         # updates
