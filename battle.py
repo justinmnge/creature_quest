@@ -1,5 +1,5 @@
 from settings import *
-from sprites import MonsterSprite, MonsterNameSprite, MonsterLevelSprite, MonsterStatsSprite, MonsterOutlineSprite
+from sprites import MonsterSprite, MonsterNameSprite, MonsterLevelSprite, MonsterStatsSprite, MonsterOutlineSprite, AttackSprite
 from groups import BattleSprites
 from game_data import ATTACK_DATA
 from support import draw_bar
@@ -51,7 +51,7 @@ class Battle:
             pos = list(BATTLE_POSITIONS['right'].values())[pos_index]
             groups = (self.battle_sprites, self.opponent_sprites)        
             
-        monster_sprite = MonsterSprite(pos, frames, groups, monster, index, pos_index, entity)
+        monster_sprite = MonsterSprite(pos, frames, groups, monster, index, pos_index, entity, self.apply_attack)
         MonsterOutlineSprite(monster_sprite, self.battle_sprites, outline_frames)
         
         # ui
@@ -85,6 +85,8 @@ class Battle:
                     if self.selected_attack:
                         self.current_monster.activate_attack(monster_sprite, self.selected_attack)
                         self.selected_attack, self.current_monster, self.selection_mode = None, None, None
+                    else:
+                        pass
                 
                 if self.selection_mode == 'attacks':
                     self.selection_mode = 'target'
@@ -124,6 +126,17 @@ class Battle:
     def update_all_monsters(self, option):
         for monster_sprite in self.player_sprites.sprites() + self.opponent_sprites.sprites():
             monster_sprite.monster.paused = True if option == 'pause' else False
+    
+    def apply_attack(self, target_sprite, attack, amount):
+        AttackSprite(target_sprite.rect.center, self.monster_frames['attacks'][ATTACK_DATA[attack]['animation']], self.battle_sprites)
+        # play an animation
+        
+        # get correct attack damage amount (defense, element)
+        
+        # update the monster health
+        
+        # resume
+        
     
     # ui
     def draw_ui(self):
