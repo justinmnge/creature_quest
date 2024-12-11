@@ -33,7 +33,7 @@ class Game:
         
         self.dummy_monsters = {
             0: Monster('Finsta', 18),
-            1: Monster('Ivieron', 11),
+            1: Monster('Ivieron', 22),
             2: Monster('Pouch', 21),
             3: Monster('Atrox', 17),
             4: Monster('Gulfin', 19)

@@ -9,4 +9,13 @@ A Pokemon-inspired RPG. Explore an overworld full of characters, trainers and wi
 - I learned how to implement an overworld system where the character can enter a building from a large map and once they go to the door, it transitions the player to inside the building.
 - I learned how to implement a dialog system
 - I learned how to make a monster index with relevant stats and abilities
+- I learned to create a battle system with a player side and opponent side of 3 monsters each
+    - This battle system allows the player to either 'attack', 'defend', 'switch' monsters or 'catch' an opponent's monster during the their respective turn
+    - Turn rotation is also based on the 'initiative' of each monster, that is tied to their current level
+    - Monsters (active on your side) will also recieve experience points to level up once they have defeated an opponent monster
+- I learned to connect the overworld with the battle system so that their is a smooth transition between the two to have a seemless experience
+- I have learned how to create an 'evolving' system where monsters evolve to a stronger version and new version of themself once they reach a specific level
+- I have learned how to implement a 'nurse' to heal all of the player monsters after a battle in the overworld
+- I have learned to add of the necessary sounds in the game
+
 
