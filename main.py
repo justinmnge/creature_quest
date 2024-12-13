@@ -1,5 +1,6 @@
 from settings import *
 from game_data import *
+from random import randint
 from sprites import Sprite, AnimatedSprite, MonsterPatchSprite, BorderSprite, Collidableprite, TransitionSprite
 from entities import Player, Character
 from groups import AllSprites
@@ -8,6 +9,7 @@ from dialog import *
 from monster import Monster
 from monster_index import MonsterIndex
 from battle import Battle
+from timer import Timer
 
 class Game:
     # general
@@ -18,6 +20,7 @@ class Game:
         pygame.display.set_caption('Creature Quest')
         self.clock = pygame.time.Clock()
         self.running = True
+        self.encounter_timer = Timer(2000, func = self.monster_encounter)
         
         # player monsters
         self.player_monsters = {
@@ -44,6 +47,7 @@ class Game:
         self.collision_sprites = pygame.sprite.Group()
         self.character_sprites = pygame.sprite.Group()
         self.transition_sprites = pygame.sprite.Group()
+        self.monster_sprites = pygame.sprite.Group()
         
         # transition / tint
         self.transition_target = None
@@ -126,7 +130,7 @@ class Game:
             
         # grass patches
         for obj in tmx_map.get_layer_by_name('Monsters'):
-            MonsterPatchSprite((obj.x, obj.y), obj.image, self.all_sprites, obj.properties['biome'])
+            MonsterPatchSprite((obj.x, obj.y), obj.image, (self.all_sprites, self.monster_sprites), obj.properties['biome'], obj.properties['monsters'], obj.properties['level'])
         
         # entities    
         for obj in tmx_map.get_layer_by_name('Entities'):
@@ -185,8 +189,12 @@ class Game:
                 opponent_monsters = character.monsters, 
                 monster_frames = self.monster_frames, 
                 bg_surf = self.bg_frames[character.character_data['biome']],
-                fonts = self.fonts)
+                fonts = self.fonts,
+                end_battle = self.end_battle,
+                character = character)
             self.tint_mode = 'tint'
+        else:
+            self.player.unblock()
     
     # transition system
     def transition_check(self):
@@ -215,6 +223,33 @@ class Game:
         self.tint_progress = max(0, min(self.tint_progress, 255))    
         self.tint_surf.set_alpha(self.tint_progress)
         self.display_surface.blit(self.tint_surf, (0, 0))
+
+    def end_battle(self, character):
+        self.transition_target = 'level'
+        self.tint_mode = 'tint'
+        if character:
+            character.character_data['defeated'] = True
+            self.create_dialog(character)
+
+    # monster encounters
+    def check_monster(self):
+        if [sprite for sprite in self.monster_sprites if sprite.rect.colliderect(self.player.hitbox)] and not self.battle and self.player.direction:
+            if not self.encounter_timer.active:
+                self.encounter_timer.activate()
+                
+    def monster_encounter(self):
+        sprites = [sprite for sprite in self.monster_sprites if sprite.rect.colliderect(self.player.hitbox)]
+        if sprites and self.player.direction:
+            self.player.block()
+            self.transition_target = Battle(
+                player_monsters = self.player_monsters, 
+                opponent_monsters = {index:Monster(monster, sprites[0].level + randint(-3, 3)) for index, monster in enumerate(sprites[0].monsters)}, 
+                monster_frames = self.monster_frames, 
+                bg_surf = self.bg_frames[sprites[0].biome],
+                fonts = self.fonts,
+                end_battle = self.end_battle,
+                character = None)
+            self.tint_mode = 'tint'
         
     def run(self):
         while self.running:
@@ -227,9 +262,11 @@ class Game:
                     self.running = False
                     
             # update
+            self.encounter_timer.update()
             self.input()
             self.transition_check()
             self.all_sprites.update(dt)
+            self.check_monster()
             
             # draw
             self.all_sprites.draw(self.player)

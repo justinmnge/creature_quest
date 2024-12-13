@@ -30,5 +30,6 @@ A Pokemon-inspired RPG. Explore an overworld full of characters, trainers and wi
 - I have learned how to create an 'evolving' system where monsters evolve to a stronger version and new version of themself once they reach a specific level
 - I have learned how to implement a 'nurse' to heal all of the player monsters after a battle in the overworld
 - I have learned to add of the necessary sounds in the game
+- I learned to create a monster encounter timer when the player walks through the tall grass in-game, it will trigger a battle with a random monster
 
 
