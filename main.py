@@ -10,6 +10,7 @@ from monster import Monster
 from monster_index import MonsterIndex
 from battle import Battle
 from timer import Timer
+from evolution import Evolution
 
 class Game:
     # general
@@ -28,18 +29,10 @@ class Game:
             1: Monster('Friolera', 29),
             2: Monster('Sparchu', 31),
             3: Monster('Finsta', 28),
-            4: Monster('Ivieron', 31),
+            4: Monster('Larvea', 4),
             5: Monster('Pouch', 25),
             6: Monster('Atrox', 4),
             7: Monster('Gulfin', 19)
-        }
-        
-        self.dummy_monsters = {
-            0: Monster('Finsta', 18),
-            1: Monster('Ivieron', 22),
-            2: Monster('Pouch', 21),
-            3: Monster('Atrox', 17),
-            4: Monster('Gulfin', 19)
         }
         
         # groups
@@ -65,6 +58,9 @@ class Game:
         self.monster_index = MonsterIndex(self.player_monsters, self.fonts, self.monster_frames)
         self.index_open = False
         self.battle = None
+        self.evolution = None
+        
+        self.check_evolution()
                 
     def import_assets(self):
         self.tmx_maps = tmx_importer('data', 'maps')
@@ -230,6 +226,20 @@ class Game:
         if character:
             character.character_data['defeated'] = True
             self.create_dialog(character)
+        elif not self.evolution:
+            self.player.unblock()
+            self.check_evolution()
+
+    def check_evolution(self):
+        for index, monster in self.player_monsters.items():
+            if monster.evolution:
+                if monster.level == monster.evolution[1]:
+                    self.player.block()
+                    self.evolution = Evolution(self.monster_frames['monsters'], monster.name, monster.evolution[0], self.fonts['bold'], self.end_evolution)
+                    
+    def end_evolution(self):
+        self.evolution = None
+        self.player.unblock()
 
     # monster encounters
     def check_monster(self):
@@ -240,6 +250,7 @@ class Game:
     def monster_encounter(self):
         sprites = [sprite for sprite in self.monster_sprites if sprite.rect.colliderect(self.player.hitbox)]
         if sprites and self.player.direction:
+            self.encounter_timer.duration = randint(800, 2500)
             self.player.block()
             self.transition_target = Battle(
                 player_monsters = self.player_monsters, 
@@ -275,6 +286,7 @@ class Game:
             if self.dialog_tree:    self.dialog_tree.update()
             if self.index_open:     self.monster_index.update(dt)
             if self.battle:         self.battle.update(dt)
+            if self.evolution:      self.evolution.update(dt)
             
             self.tint_screen(dt)
             pygame.display.update()
