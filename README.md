@@ -1,35 +1,56 @@
-## Game
+# Background
 
 A Pokemon-inspired RPG. Explore an overworld full of characters, trainers and wild monsters. Complex battle system, you are able to: choose a range of attacks with monsters and catch wild ones. Contains a lot of animations and visual details. Monsters can level up and evolve, while also learning new attacks on some levels. Visualizing all that information, there will be a monster index (similar to a Pokedex) that shows: stats, attacks and abilities of all of them.
 
-## Controls
+![screen1](https://github.com/user-attachments/assets/dc21ed44-46f7-4078-8139-7143153e94c4)
 
-- Player overworld movement WASD or Arrow keys
-- Player overworld interaction SPACE
-- Player overworld Monster Index ENTER/RETURN
-    - Monster Index selection Arrow Keys
-    - Monster Index interaction SPACE * 2 (To rotate order of monsters, you press SPACE on monster, then move to another monster position and press SPACE again to switch both monster positions)
-    - Monster Index exit ENTER/RETURN
-- Battle system selection Arrow Keys
-- Battle system interaction SPACE
+![screen2](https://github.com/user-attachments/assets/56cfec73-7369-45cd-aab9-44ce5c0afb55)
 
-### Lessons Observed
+## How to Play
 
-- I learned how to organize complex projects, manage databases and how to build UIs from scratch.
-- I learned to how implement the water system via tmx
-- I learned how to implement an overworld system where the character can enter a building from a large map and once they go to the door, it transitions the player to inside the building.
-- I learned how to implement a dialog system
-- I learned how to make a monster index with relevant stats and abilities
-- I learned to create a battle system with a player side and opponent side of 3 monsters each
-    - This battle system allows the player to either 'attack', 'defend', 'switch' monsters or 'catch' an opponent's monster during the their respective turn
-    - Turn rotation is also based on the 'initiative' of each monster, that is tied to their current level
-    - Monsters (active on your side) will also recieve experience points to level up once they have defeated an opponent monster
-- I learned to connect the overworld with the battle system so that their is a smooth transition between the two to have a seemless experience
-    - By connecting the overworld and battle system, I have learned to pull the opponent data to show what they have for monsters in the battle system
-        - Created variety in battles with random opponents
-- I have learned how to create an 'evolving' system where monsters evolve to a stronger version and new version of themself once they reach a specific level
-- I have learned how to implement a 'nurse' to heal all of the player monsters after a battle in the overworld
-- I have learned to add of the necessary sounds in the game
-- I learned to create a monster encounter timer when the player walks through the tall grass in-game, it will trigger a battle with a random monster
+1. **Run the Game**: Open your terminal and type `python3 main.py` to start the game.
+    - Dependencies required: Pygame-ce
+   
+2. **Controls**:
+    **OVERWORLD**
+   - **Arrow Keys** or **WASD keys**: Player movement.
+   - **Spacebar**: Interaction with other trainers.
+   - **Enter**: To open your Monster Index.
+
+   **MONSTER INDEX**
+   - **Arrow Keys**: To select a monster.
+   - **Spacebar x2**: To rotate the order of your monsters. Press SPACEBAR on a monster, then move to another monster position and press SPACEBAR again to swith both monster positions.
+   - **Enter**: To exit the Monster Index.
+
+   **BATTLE SYSTEM**
+   - **Arrow Keys**: To select to either: Attack, Defend, Switch or Catch.
+   - **Spacebar**: To interaction with the menu.
+
+3. **Objective**: 
+   - To defeat the other trainers and capture more powerful monsters.
+
+## Lessons Observed in the Project:
+   - ### Technical Skills:
+      - Organized complex project structures
+      - Database management
+      - User interface (UI) development from scratch
+      - Implemented system transitions
+      - Created dynamic data systems (monster index, battle mechanics)
+      - Developed turn-based combat logic with initiative-driven mechanics
+      - Implemented experience and leveling system
+      - Random encounter generation
+ 
+   - ### Game Development Concepts:
+      - Overworld system design with character movement and map interaction
+      - Interactive dialog system
+      - Battle mechanics:
+        - Multiple combat actions (attack, defend, switch, catch);
+        - Turn rotation based on monster initiative;
+        - Experience/leveling system; and
+        - Monster evolution
+
+   - ### Tools & Frameworks:
+      - Practical experience with the Pygame library
+      - Version control
 
 
